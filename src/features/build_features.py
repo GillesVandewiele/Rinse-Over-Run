@@ -321,7 +321,7 @@ def get_processes(data, phases, train=True):
     return filtered_processes
 
 def load_data(train_path, test_path, label_path, recipe_path):
-    """Load the different input dataframes
+    """Load the different input dataframes.
 
     Parameters:
     -----------
@@ -357,7 +357,93 @@ def load_data(train_path, test_path, label_path, recipe_path):
     recipe_df['acid_num'] = recipe_df['acid'] * 8
     recipe_df['recipe'] = recipe_df['pre_rinse_num'] + recipe_df['caustic_num'] + recipe_df['intermediate_rinse_num'] + recipe_df['acid_num']
 
-    return train_df, test_df, label_df, recipe_df 
+    return train_df, test_df, label_df, recipe_df
+
+def get_corr_features(X):
+    """Get all coordinates in the X-matrix with correlation value equals 1
+    (columns with equal values), excluding elements on the diagonal.
+
+    Parameters:
+    -----------
+    - train_df: pd.DataFrame
+        the feature matrix where correlated features need to be removed
+
+    Returns
+    -------
+    - correlated_feature_pairs: list of tuples
+        coordinates (row, col) where correlated features can be found
+    """
+    row_idx, col_idx = np.where(X.corr() == 1)
+    self_corr = set([(i, i) for i in range(X.shape[1])])
+    correlated_feature_pairs = set(list(zip(row_idx, col_idx))) - self_corr
+    return correlated_feature_pairs
+
+
+def get_uncorr_features(data):
+    """Remove clusters of these correlated features, until only one feature 
+    per cluster remains.
+
+    Parameters:
+    -----------
+    - data: pd.DataFrame
+        the feature matrix where correlated features need to be removed
+
+    Returns
+    -------
+    - data_uncorr_cols: list of string
+        the column names that are completely uncorrelated to eachother
+    """
+    X_train_corr = data.copy()
+    correlated_features = get_corr_features(X_train_corr)
+
+    corr_cols = set()
+    for row_idx, col_idx in correlated_features:
+        corr_cols.add(row_idx)
+        corr_cols.add(col_idx)
+
+    uncorr_cols = list(set(X_train_corr.columns) - set(X_train_corr.columns[list(corr_cols)]))
+   
+    col_mask = [False]*X_train_corr.shape[1]
+    for col in corr_cols:
+        col_mask[col] = True
+    X_train_corr = X_train_corr.loc[:, col_mask]
+  
+    correlated_features = get_corr_features(X_train_corr)
+
+    while correlated_features:
+        corr_row, corr_col = correlated_features.pop()
+        col_mask = [True]*X_train_corr.shape[1]
+        col_mask[corr_row] = False
+        X_train_corr = X_train_corr.loc[:, col_mask]
+        correlated_features = get_corr_features(X_train_corr)
+
+    data_uncorr_cols = list(set(list(X_train_corr.columns) + uncorr_cols))
+
+    return data_uncorr_cols
+
+def remove_features(data):
+    """Remove all correlated features and columns with only a single value.
+
+    Parameters:
+    -----------
+    - data: pd.DataFrame
+        the feature matrix where correlated features need to be removed
+
+    Returns
+    -------
+    - useless_cols: list of string
+        list of column names that have no predictive value
+    """
+    single_cols = list(data.columns[data.nunique() == 1])
+
+    uncorr_cols = get_uncorr_features(data)
+    corr_cols = list(set(data.columns) - set(uncorr_cols))
+
+    useless_cols = list(set(single_cols + corr_cols))
+
+    logging.info('Removing {} features'.format(len(useless_cols)))
+
+    return useless_cols
 
 @click.command()
 @click.argument('train_path', type=click.Path(exists=True))
@@ -430,6 +516,10 @@ def main(train_path, test_path, label_path, recipe_path, output_path):
             # completely unsupervised, and each row is processed independently
             all_processes = train_processes + test_processes
             phase_features = create_feature_matrix(all_data, all_processes, process_comb_to_phases[process_combination])
+
+            # Drop columns without any predictive value
+            to_drop = remove_features(phase_features)
+            phase_features = phase_features.drop(to_drop, axis=1)
 
             # Extract the train and test features
             train_phase_features = phase_features.loc[train_processes]
