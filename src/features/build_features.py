@@ -469,8 +469,6 @@ def main(train_path, test_path, label_path, recipe_path, output_path):
     - output_path:
         the location where to store the extracted features
     """
-    logger = logging.getLogger(__name__)
-
     process_comb_to_phases = {
         15: ['pre_rinse', 'caustic', 'intermediate_rinse', 'acid'],
         3:  ['pre_rinse', 'caustic'],

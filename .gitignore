@@ -1,4 +1,7 @@
-data/*
+data/features/*
+data/predictions/*
+data/raw/*
+output/*
 
 catboost_info/*
 
