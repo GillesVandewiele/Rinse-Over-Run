@@ -49,6 +49,7 @@ weights = {
     (15, 15): 0.2262,
 }
 
+
 def custom_mape(approxes, targets):
     """Competition metric is a slight variant on MAPE."""
     nominator = np.abs(np.subtract(approxes, targets))
