@@ -150,9 +150,13 @@ def fit_cat_cv(X, y, rec, comb, output_path=None, n_folds=2):
 
 
 def load_data(mode, rec, comb, feature_path, stack_path):
+    """Load features, optionally append with predictions from other
+    classifiers for stacking. If 'target' column is present, store it
+    in y."""
     path = '{}/{}_features_{}_{}.csv'
     features = pd.read_csv(path.format(feature_path, mode, rec, comb), 
-                           index_col=0).sample(250)
+                           index_col=0)
+    features = features.sample(min(len(features), 250))
 
     X = features
     y = None
@@ -216,9 +220,11 @@ def fit_models_submission(feature_path, output_path, stack_path):
     """Generate a submission by fitting CatBoost  on the features and other 
     classifiers' predictions if stack_path is provided. Perform this for
     every (recipe, process_combination)."""
-    predictions = []
+    submission = []
     for rec in combinations_per_recipe:
         for comb in combinations_per_recipe[rec]:
+            log_str = 'Generating predictions for recipe {} & combination {}'
+            logging.info(log_str.format(rec, comb))
             X_train, y_train = load_data('train', rec, comb, feature_path, 
                                          stack_path)
             X_test, _ = load_data('test', rec, comb, feature_path, 
@@ -231,9 +237,8 @@ def fit_models_submission(feature_path, output_path, stack_path):
             prediction_df = pd.DataFrame(np.reshape(predictions, (-1, 1)), 
                                          index=X_test.index, 
                                          columns=['prediction'])
-            predictions.append(prediction_df)
+            submission.append(prediction_df)
 
-    submission = pd.concat(predictions)
     today = datetime.datetime.now()
     submission_df = pd.concat(submission).sort_index().reset_index(drop=False)
     submission_df.columns = ['process_id', 'final_rinse_total_turbidity_liter']
