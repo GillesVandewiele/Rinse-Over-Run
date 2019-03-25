@@ -8,6 +8,8 @@ Solution to get the second rank on the leaderboard of the Rinse over Run competi
 
 `python src/features/build_features.py data/raw/train_values.csv data/raw/test_values.csv data/raw/train_labels.csv data/raw/recipe_metadata.csv data/features/`
 
+**NOTE: This requires quite a lot of RAM (>8 GB) and takes a while (~5 hours). It should be noted that this can possibly be reduced by fiddling with the parameters of the `extract_features` function from tsfresh, or by partitioning the input file into multiple chunks and handling each chunk independently.**
+
 ## Generating out-of-sample predictions for stacking
 
 ## Evaluate models with cross-validation
