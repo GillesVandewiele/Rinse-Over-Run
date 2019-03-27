@@ -147,7 +147,7 @@ def encode_binary_timeseries(df):
             
     # create features: mean, standard deviation, mean of final values,
     # sum and number of zeros
-    ts_features = ts_df.groupby('process_id').agg(['mean', 'std', 'sum'
+    ts_features = ts_df.groupby('process_id').agg(['mean', 'std', 'sum',
                                                    lambda x: x.tail(5).mean(),
                                                    count_zeros])
     

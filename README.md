@@ -4,17 +4,27 @@ Solution to get the second rank on the leaderboard of the Rinse over Run competi
 
 ## Install
 
+We added a `requirements.txt` with all dependencies. Just run `pip install -r requirements.txt`.
+
 ## Building the features
 
-`python src/features/build_features.py data/raw/train_values.csv data/raw/test_values.csv data/raw/train_labels.csv data/raw/recipe_metadata.csv data/features/`
+`build_features.py [OPTIONS] TRAIN_PATH TEST_PATH LABEL_PATH RECIPE_PATH OUTPUT_PATH`
+
+Example: `python3 src/features/build_features.py data/raw/train_values.csv data/raw/test_values.csv data/raw/train_labels.csv data/raw/recipe_metadata.csv data/features/`
 
 **NOTE: This requires quite a lot of RAM (>8 GB) and takes a while (~5 hours). It should be noted that this can possibly be reduced by fiddling with the parameters of the `extract_features` function from tsfresh, or by partitioning the input file into multiple chunks and handling each chunk independently.**
 
 ## Generating out-of-sample predictions for stacking
 
+`stacking.py [OPTIONS] FEATURE_PATH OUTPUT_PATH`
+
+Example: `python3 src/models/stacking.py data/features/ data/predictions/`
+
 ## Evaluate models with cross-validation
 
-`python src/models/gradient_boosting.py --cross_validation data/features/ output/`
+`gradient_boosting.py --cross-validation FEATURE_PATH OUTPUT_PATH [STACK_PATH]`
+
+Example: `python3 src/models/gradient_boosting.py --cross_validation data/features/ output/`
 
 ### Results without stacking
 
@@ -41,7 +51,9 @@ TOTAL MAPE = 0.2821164305690393
 
 ## Create submission
 
-`python src/models/gradient_boosting.py --submission data/features/ output/`
+`gradient_boosting.py --submission FEATURE_PATH OUTPUT_PATH [STACK_PATH]`
+
+Example: `python3 src/models/gradient_boosting.py --submission data/features/ output/`
 
 ## Project Organization
 
