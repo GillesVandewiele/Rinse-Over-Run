@@ -2,17 +2,17 @@
 
 The code for the winning solution of the [Rinse Over Run competition](https://www.drivendata.org/competitions/56/predict-cleaning-time-series/), hosted by DrivenData.
 
-## Install
+## Requirements and install
 
-We added a `requirements.txt` with all dependencies. Just run `pip install -r requirements.txt`.
+- Quite a significant amount of RAM memory is required (~10GB). It should be noted that the code is not optimized, and therefore the memory requirement can easily be reduced by adapting some parts of the code.
+- Running all steps will take roughly 30 hours.
+- We added a `requirements.txt` with all dependencies. Just run `pip install -r requirements.txt`.
 
 ## Building the features
 
 `build_features.py [OPTIONS] TRAIN_PATH TEST_PATH LABEL_PATH RECIPE_PATH OUTPUT_PATH`
 
 Example: `python3 src/features/build_features.py data/raw/train_values.csv data/raw/test_values.csv data/raw/train_labels.csv data/raw/recipe_metadata.csv data/features/`
-
-**NOTE: This requires quite a lot of RAM (>8 GB) and takes a while (~5 hours). It should be noted that this can possibly be reduced by fiddling with the parameters of the `extract_features` function from tsfresh, or by partitioning the input file into multiple chunks and handling each chunk independently.**
 
 ## Generating out-of-sample predictions for stacking
 
@@ -81,3 +81,7 @@ Example: `python3 src/models/gradient_boosting.py --submission data/features/ ou
     │   │   ├── stacking.py
     └── └── └── gradient_boosting.py
 ```
+
+## Contact
+
+In case anythings goes wrong while running the code, or you have any questions, please feel free to create an issue or send me a mail on `gilles(dot)vandewiele(at)ugent(dot)be`
