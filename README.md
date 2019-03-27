@@ -1,6 +1,6 @@
 # Rinse Over Run
 
-Solution to get the second rank on the leaderboard of the Rinse over Run competition
+The code for the winning solution of the [Rinse Over Run competition](https://www.drivendata.org/competitions/56/predict-cleaning-time-series/), hosted by DrivenData.
 
 ## Install
 
@@ -65,22 +65,14 @@ Example: `python3 src/models/gradient_boosting.py --submission data/features/ ou
     │   ├── predictions    <- Predictions generated through stacking.
     │   └── raw            <- The original, immutable data dump.
     │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
     ├── output             <- Generated graphics/plots and submission files.
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
+    ├── notebooks          <- Jupyter notebooks exported from Google Colab
     │
     ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
     │                         generated with `pip freeze > requirements.txt`
     │
     ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
     │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
     │   │   └── build_features.py
