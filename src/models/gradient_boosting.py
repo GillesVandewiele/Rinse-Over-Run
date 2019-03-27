@@ -193,7 +193,7 @@ def fit_models_cross_validation(feature_path, output_path, stack_path):
     proc_15_15 = all_predictions[(15, 15)].index
     proc_9_8 = all_predictions[(9, 8)].index
     proc_9_8 = list(set(proc_9_8) - set(proc_15_15))
-    proc_9_8 = all_predictions[(9, 8)].loc[proc_9_8]
+    all_predictions[(9, 8)] = all_predictions[(9, 8)].loc[proc_9_8]
 
     table_data = [['Recipe', 'Process Combination', 'Weight', 'MAPE']]
     total_mape = 0

@@ -4,7 +4,7 @@ The code for the winning solution of the [Rinse Over Run competition](https://ww
 
 ## Requirements and install
 
-- Quite a significant amount of RAM memory is required (~10GB). It should be noted that the code is not optimized, and therefore the memory requirement can easily be reduced by adapting some parts of the code.
+- Quite a significant amount of RAM memory is required (~10GB). It should be noted that the code is not optimized, and therefore the memory requirement can easily be reduced by adapting some parts of the code. Some easy optimizations include running CatBoost on GPU, removing the Random Forest Classifier with 250 trees from the stack, and removing some of the most computationally expensive features from tsfresh.
 - Running all steps will take roughly 30 hours.
 - We added a `requirements.txt` with all dependencies. Just run `pip install -r requirements.txt`.
 
