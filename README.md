@@ -57,6 +57,8 @@ Example: `python3 src/models/gradient_boosting.py --submission data/features/ ou
 
 ## Project Organization
 
+**Make sure your directory is structured as follows by creating the required directories (such as output and the different data directories).**
+
 ```
     ├── LICENSE
     ├── README.md          <- The top-level README for developers using this project.
