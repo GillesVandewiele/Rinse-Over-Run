@@ -13,7 +13,8 @@ from tsfresh.utilities.dataframe_functions import impute
 
 
 def encode_categorical(df):
-    """Process the different categorical data in df.
+    """Process the different categorical data in df (almost identical
+    to the baseline from DrivenData).
 
     Parameters:
     -----------
@@ -144,8 +145,9 @@ def encode_binary_timeseries(df):
 
     ts_df = df[['process_id'] + bin_cols].set_index('process_id')
             
-    # create features: count, min, max, mean, standard deviation
-    ts_features = ts_df.groupby('process_id').agg(['mean', 'std', 
+    # create features: mean, standard deviation, mean of final values,
+    # sum and number of zeros
+    ts_features = ts_df.groupby('process_id').agg(['mean', 'std', 'sum'
                                                    lambda x: x.tail(5).mean(),
                                                    count_zeros])
     

@@ -106,7 +106,7 @@ def fit_cat(X_train, y_train, X_test, output_path=None):
     predictions on test set."""
     X_train, y_train, X_val, y_val = get_validation_data(X_train, y_train)
 
-    cat = CatBoostRegressor(iterations=10, od_type='Iter', od_wait=100, 
+    cat = CatBoostRegressor(iterations=10000, od_type='Iter', od_wait=100, 
                             learning_rate=0.33,
                             loss_function='MAPE', eval_metric=MAPEMetric(), 
                             task_type='CPU')
@@ -120,7 +120,7 @@ def fit_cat(X_train, y_train, X_test, output_path=None):
     return predictions
 
 
-def fit_cat_cv(X, y, rec, comb, output_path=None, n_folds=2):
+def fit_cat_cv(X, y, rec, comb, output_path=None, n_folds=5):
     """Wrapper around fit_cat to generate out-of-sample predictions in CV."""
     cv_predictions = []
     kf = KFold(n_splits=n_folds, random_state=2019, shuffle=True)
@@ -133,7 +133,7 @@ def fit_cat_cv(X, y, rec, comb, output_path=None, n_folds=2):
 
         log_str = 'Fitting data from recipe {} and combination {}...'
         logging.info(log_str.format(rec, comb))
-        path = '{}/{}_{}_{}'.format(output_path.strip('/'), rec, comb, 
+        path = '{}/{}_{}_{}'.format(output_path.rstrip('/'), rec, comb, 
                                     fold_nr + 1)
         predictions = np.exp(fit_cat(X_train, y_train, X_test, 
                                      output_path=path))
@@ -157,7 +157,6 @@ def load_data(mode, rec, comb, feature_path, stack_path):
     path = '{}/{}_features_{}_{}.csv'
     features = pd.read_csv(path.format(feature_path, mode, rec, comb), 
                            index_col=0)
-    features = features.sample(min(len(features), 250))
 
     X = features
     y = None
@@ -231,7 +230,7 @@ def fit_models_submission(feature_path, output_path, stack_path):
             X_test, _ = load_data('test', rec, comb, feature_path, 
                                   stack_path)
 
-            path = '{}/{}_{}_{}'.format(output_path.strip('/'), rec, comb, 
+            path = '{}/{}_{}_{}'.format(output_path.rstrip('/'), rec, comb, 
                                         'submission')
             predictions = np.exp(fit_cat(X_train, y_train, X_test, 
                                          output_path=path))

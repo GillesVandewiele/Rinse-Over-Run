@@ -16,6 +16,29 @@ Solution to get the second rank on the leaderboard of the Rinse over Run competi
 
 `python src/models/gradient_boosting.py --cross_validation data/features/ output/`
 
+### Results without stacking
+
+```
++MAPE per model----------------+--------+---------------------+
+| Recipe | Process Combination | Weight | MAPE                |
++--------+---------------------+--------+---------------------+
+| 3      | 1                   | 0.0219 | 0.38150749103694254 |
+| 3      | 2                   | 0.0064 | 0.30265204730067097 |
+| 3      | 3                   | 0.1695 | 0.3036406446617803  |
+| 9      | 8                   | 0.0411 | 0.261495246538695   |
+| 15     | 1                   | 0.0765 | 0.3113903339369102  |
+| 15     | 2                   | 0.0013 | 0.28706253186845304 |
+| 15     | 3                   | 0.2289 | 0.28177810261072755 |
+| 15     | 6                   | 0.0007 | 0.27781473057860173 |
+| 15     | 7                   | 0.2258 | 0.2799518406911836  |
+| 15     | 14                  | 0.0017 | 0.2539413686237908  |
+| 15     | 15                  | 0.2262 | 0.2523300341218434  |
++--------+---------------------+--------+---------------------+
+TOTAL MAPE = 0.2821164305690393
+```
+
+### Results with stacking
+
 ## Create submission
 
 `python src/models/gradient_boosting.py --submission data/features/ output/`
